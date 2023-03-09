@@ -1,0 +1,64 @@
+﻿@model _19T1021010.Web.Models.PaginationSearchInput
+@{
+    ViewBag.Title = "Quản lý khách hàng";
+}
+
+<div class="box box-primary">
+    <div class="box-body">
+        <form id="formSearch" action="~/Customer/Search">
+            <div class="input-group input-group-sm">
+                <input type="hidden" name="PageSize" value="@Model.PageSize" />
+                <input type="text" name="SearchValue" class="form-control" value="@Model.SearchValue" autofocus>
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-info" style="margin-right: 5px;">
+                        <i class="glyphicon glyphicon-search"></i>
+                        Tìm kiếm
+                    </button>
+                </span>
+                <span class="input-group-btn">
+                    <a href="~/Customer/Create" class="btn btn-primary">
+                        <i class="glyphicon glyphicon-plus"></i>
+                        Bổ sung
+                    </a>
+                </span>
+            </div>
+
+        </form>
+
+        <div id="searchResult">
+
+        </div>
+    
+</div>
+    </div>
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $("#formSearch").submit(function (e) {
+                e.preventDefault();
+                doSearch(1);
+                return;
+            });
+            doSearch(@Model.Page);
+        })
+        function doSearch(page) {
+            var url = $("#formSearch").prop("action");
+            var postData = $("#formSearch").serializeArray();
+            postData.push({ "name": "page", "value": page });
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: postData,
+                error: function () {
+                    alert("Your request is not valid!");
+                },
+                success: function (data) {
+                    $("#searchResult").html(data);
+                }
+            });
+
+            return;
+        }
+    </script>
+}
